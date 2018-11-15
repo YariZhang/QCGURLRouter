@@ -97,12 +97,12 @@ public extension UIViewController {
             return
         }
         superV.backgroundColor = UIColor.clear
-        getCurrentView().autoresizingMask = [UIViewAutoresizing.flexibleHeight, UIViewAutoresizing.flexibleWidth]
+        getCurrentView().autoresizingMask = [UIView.AutoresizingMask.flexibleHeight, UIView.AutoresizingMask.flexibleWidth]
         
         let opacityView = UIView(frame: superV.bounds)
         opacityView.tag = 1020
         opacityView.backgroundColor = UIColor.black
-        opacityView.autoresizingMask = [UIViewAutoresizing.flexibleHeight, UIViewAutoresizing.flexibleWidth]
+        opacityView.autoresizingMask = [UIView.AutoresizingMask.flexibleHeight, UIView.AutoresizingMask.flexibleWidth]
         opacityView.layer.opacity = 0.0
         superV.insertSubview(opacityView, at: 1)
         
@@ -110,7 +110,7 @@ public extension UIViewController {
         rightContainerView.frame.origin.x = rightContainerView.bounds.width
         rightContainerView.tag = 1215
         rightContainerView.backgroundColor = UIColor.clear
-        rightContainerView.autoresizingMask = UIViewAutoresizing.flexibleHeight
+        rightContainerView.autoresizingMask = UIView.AutoresizingMask.flexibleHeight
         superV.insertSubview(rightContainerView, at: 3)
         addRightGestures()
         setUpViewController(rightContainerView, targetViewController: viewController)
@@ -120,8 +120,8 @@ public extension UIViewController {
     private func setUpViewController(_ targetView: UIView, targetViewController: UIViewController?) {
         if let viewController = targetViewController {
             targetView.addSubview(viewController.view)
-            superController(root: self).addChildViewController(viewController)
-            viewController.didMove(toParentViewController: superController(root: self))
+            superController(root: self).addChild(viewController)
+            viewController.didMove(toParent: superController(root: self))
             viewController.view.frame = targetView.bounds
         }
     }
@@ -129,9 +129,9 @@ public extension UIViewController {
     
     private func removeViewController(_ viewController: UIViewController?) {
         if let _viewController = viewController {
-            _viewController.willMove(toParentViewController: nil)
+            _viewController.willMove(toParent: nil)
             _viewController.view.removeFromSuperview()
-            _viewController.removeFromParentViewController()
+            _viewController.removeFromParent()
         }
     }
     
@@ -218,7 +218,7 @@ public extension UIViewController {
         var frame = rightContainerView.frame
         frame.origin.x = finalXOrigin
         let duration: TimeInterval = animated ? 0.3 : 0
-        UIView.animate(withDuration: duration, delay: 0.0, options: UIViewAnimationOptions(), animations: { () -> Void in
+        UIView.animate(withDuration: duration, delay: 0.0, options: UIView.AnimationOptions(), animations: { () -> Void in
             rightContainerView.frame = frame
             self.getOpacityView()?.layer.opacity = 0.5
             self.getCurrentView().transform = CGAffineTransform(translationX: -rightContainerView.bounds.width / 2, y: 0)
@@ -236,7 +236,7 @@ public extension UIViewController {
         frame.origin.x = finalXOrigin
         
         let duration: TimeInterval = animated ? 0.3 : 0
-        UIView.animate(withDuration: duration, delay: 0.0, options: UIViewAnimationOptions(), animations: { () -> Void in
+        UIView.animate(withDuration: duration, delay: 0.0, options: UIView.AnimationOptions(), animations: { () -> Void in
             rightContainerView.frame = frame
             self.getOpacityView()?.layer.opacity = 0.0
             self.getCurrentView().transform = CGAffineTransform(translationX: 0, y: 0)
@@ -277,10 +277,10 @@ public extension UIViewController {
         }
         ViewControllerNode.getLast().controller?.view.endEditing(true)
         switch panGesture.state {
-        case UIGestureRecognizerState.began:
+        case UIGestureRecognizer.State.began:
             ViewControllerNode.getLast().originFrame = rightContainerView.frame
             ViewControllerNode.getLast().originX = panGesture.location(in: superView).x
-        case UIGestureRecognizerState.changed:
+        case UIGestureRecognizer.State.changed:
             var newFrame = ViewControllerNode.getLast().originFrame
             let locX = panGesture.location(in: superView).x
             newFrame.origin.x = ViewControllerNode.getLast().originFrame.origin.x + (locX - ViewControllerNode.getLast().originX)
@@ -295,7 +295,7 @@ public extension UIViewController {
             }
             self.applyRightContentViewScale()
             
-        case UIGestureRecognizerState.ended:
+        case UIGestureRecognizer.State.ended:
             fallthrough
         case .cancelled :
             let velocity: CGPoint = panGesture.velocity(in: panGesture.view)
