@@ -56,7 +56,10 @@ class QCGRouteManager: NSObject {
     }
     
     @discardableResult
-    func update(url: URL, navi: UINavigationController.Type?, mode: QCGVCDisplayMode) -> Bool{
+    func update(url: URL,
+                navi: UINavigationController.Type?,
+                mode: QCGVCDisplayMode,
+                param: Dictionary<String, Any>? = nil) -> Bool{
         if let hIntent = find(url: url) {
             if let intent = hIntent.intent {
                 intent.navigation = navi
@@ -71,8 +74,8 @@ class QCGRouteManager: NSObject {
                     intent.displayMode = QCGDrawDisplay()
                     break
                 }
-                var params = QCGPathUtil.getParams(for: url)
-                params[mode.rawValue] = "1"
+                var params = (QCGPathUtil.getParams(for: url) ?? param) ?? Dictionary<String, Any>()
+                params.updateValue("1", forKey: mode.rawValue)
                 intent.params = params
                 return true
             }

@@ -38,12 +38,16 @@ public class QCGURLRouter: NSObject {
      - parameter url: url identifier for registered block or class.
      - parameter navigationController: display class with custom navigation controller.
      - parameter displayMode: UIViewController display mode.
+     - parameter param: params for controller
      
      - returns: if url exists or not
     */
     @discardableResult
-    public func route(withUrl url: URL, navigationController navi: UINavigationController.Type?, displayMode mode: QCGVCDisplayMode) -> Bool {
-        manager.update(url: url, navi: navi, mode: mode)
+    public func route(withUrl url: URL,
+                      navigationController navi: UINavigationController.Type?,
+                      displayMode mode: QCGVCDisplayMode,
+                      param: Dictionary<String, Any>? = nil) -> Bool {
+        manager.update(url: url, navi: navi, mode: mode, param: param)
         if let hIntent = manager.find(url: url) , let handler = hIntent.handle {
             var dict: Dictionary<String, Any> = ["router_url": url]
             if let para = hIntent.intent?.params {
@@ -117,8 +121,8 @@ public extension QCGURLRouter {
      - returns: if url exists or not
     */
     @discardableResult
-    public func route(withUrl url: URL) -> Bool {
-        return route(withUrl: url, navigationController: nil, displayMode: .push)
+    public func route(withUrl url: URL, param: Dictionary<String, Any>? = nil) -> Bool {
+        return route(withUrl: url, navigationController: nil, displayMode: .push, param: param)
     }
     
 }

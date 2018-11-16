@@ -46,13 +46,13 @@ class ViewController: UIViewController ,QCGURLReceiver {
         
         switch btn.tag {
         case 0:
-            let str = "/quchaogu/alert?title=提示&msg=这是一条提示信息"
+            let str = "/quchaogu/alert"
             if let s = str.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-                QCGURLRouter.shareInstance.route(withUrl: URL(string: s)!)
+                QCGURLRouter.shareInstance.route(withUrl: URL(string: s)!, param: ["title": "提示", "msg": "这是一条提示信息"])
             }
             break
         case 1:
-            let url = URL(string: "http://www.quchaogu.com")!
+            let url = URL(string: "http://www.quchaogu.com/quchaogu/first")!
             if !QCGURLRouter.shareInstance.route(withUrl: url, navigationController: QCGNavigationController.self, displayMode: QCGVCDisplayMode.present) {
                 print(url.absoluteString)
             }

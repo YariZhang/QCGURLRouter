@@ -26,15 +26,16 @@ class QCGPathUtil: NSObject {
         return url.host == nil || url.host!.contains(QCGURLRouter.shareInstance.host)
     }
     
-    class func getParams(for url: URL) -> Dictionary<String,Any> {
-        var dic : Dictionary<String,Any> = Dictionary()
+    class func getParams(for url: URL) -> Dictionary<String,Any>? {
+        var dic : Dictionary<String,Any>?
         if let query = url.query {
+            dic = Dictionary<String, Any>()
             let paraArray = (query as NSString).components(separatedBy: "&")
             for p in paraArray {
                 let para = (p as NSString).components(separatedBy: "=")
                 if para.count == 2 {
                     let encodingStr = para[1]
-                    dic.updateValue(encodingStr.removingPercentEncoding ?? encodingStr, forKey: para[0])
+                    dic?.updateValue(encodingStr.removingPercentEncoding ?? encodingStr, forKey: para[0])
                 }
             }
         }
